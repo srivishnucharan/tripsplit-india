@@ -1,82 +1,56 @@
 :root {
     --primary: #075e54;
     --accent: #128c7e;
-    --bg: #f4f7f6;
+    --bg: #f0f2f5;
     --white: #ffffff;
-    --text: #2c3e50;
-    --danger: #e74c3c;
+    --text: #1c1e21;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #ddd;
-    margin: 0;
-    color: var(--text);
-}
+* { box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; margin: 0; color: var(--text); }
 
-.app-container {
-    max-width: 500px;
-    margin: 0 auto;
-    background: var(--bg);
-    min-height: 100vh;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-}
+.app-container { max-width: 500px; margin: 0 auto; background: var(--white); min-height: 100vh; padding-bottom: 100px; position: relative; }
 
-header {
-   padding-top: env(safe-area-inset-top);
-    /* This ensures your Trip Name isn't hidden by the camera notch */
-    background: var(--primary);
-    color: white;
-    padding: 25px 20px;
-    border-radius: 0 0 25px 25px;
-}
-
+header { background: var(--primary); color: white; padding: 25px 20px; border-radius: 0 0 20px 20px; }
 .header-top { display: flex; justify-content: space-between; align-items: center; }
 
 .trip-name-field {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1.4rem;
-    font-weight: 700;
-    width: 70%;
-    outline: none;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
+    background: transparent; border: none; color: white; font-size: 1.4rem; font-weight: 700;
+    width: 70%; outline: none; border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-
-.balance-card { text-align: center; margin-top: 20px; }
-
-.section { padding: 20px; background: var(--white); margin-bottom: 10px; }
-
+.balance-card { text-align: center; margin-top: 15px; }
+.section { padding: 20px; border-bottom: 8px solid var(--bg); }
 .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-
-.tag { background: #e0f2f1; color: var(--primary); padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; }
+.tag { background: #e7f3f0; color: var(--primary); padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; }
 
 .input-group { display: flex; gap: 8px; }
-
 input, select { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
 
-.add-friend-btn { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 0 15px; cursor: pointer; }
+.add-btn { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 0 15px; cursor: pointer; }
+.reset-btn { background: rgba(255,255,255,0.15); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
 
-.fab { position: fixed; bottom: 25px; right: 25px; background: var(--accent); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 99; }
+.settlement-box { background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+.settle-card { font-size: 14px; margin-bottom: 8px; }
 
-.settlement-box { background: #fff; padding: 15px; border-radius: 12px; border-left: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.share-btn { 
+    background: #25d366; color: white; width: 100%; border: none; padding: 12px; 
+    border-radius: 8px; font-weight: 700; cursor: pointer; 
+}
 
-.settle-card { margin-bottom: 10px; font-size: 15px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+.expense-card { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; }
+.expense-actions { display: flex; align-items: center; gap: 15px; }
+.delete-icon { color: #e74c3c; cursor: pointer; font-size: 18px; }
+.edit-icon { cursor: pointer; font-size: 18px; }
 
-.expense-card { display: flex; justify-content: space-between; padding: 15px; background: white; margin-bottom: 1px; border-bottom: 1px solid #eee; }
+.fab { 
+    position: fixed; bottom: 25px; right: 25px; background: var(--accent); color: white; 
+    width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; 
+    justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10;
+}
 
-.expense-actions { display: flex; align-items: center; gap: 12px; }
-
-.edit-icon { cursor: pointer; filter: grayscale(1); opacity: 0.6; }
-.delete-icon { cursor: pointer; color: var(--danger); font-size: 18px; }
-
-/* Modal */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
-.modal-content { background: white; margin: 20% auto; padding: 25px; width: 80%; border-radius: 20px; }
-.modal-btns { display: flex; gap: 10px; margin-top: 20px; }
-.primary-btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; flex: 1; font-weight: 600; }
-.secondary-btn { background: #eee; border: none; padding: 12px; border-radius: 8px; flex: 1; }
-.clear-btn { background: rgba(255,255,255,0.15); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 12px; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; }
+.modal-content { background: white; margin: 20% auto; padding: 25px; width: 85%; border-radius: 15px; }
+.modal-btns { display: flex; gap: 10px; margin-top: 15px; }
+.primary-btn { background: var(--accent); color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; }
+.secondary-btn { background: #eee; flex: 1; padding: 12px; border: none; border-radius: 8px; }

@@ -21,7 +21,7 @@ function saveData() {
 }
 
 function clearTrip() {
-    if (confirm("Reset everything? All data will be lost.")) {
+    if (confirm("Reset everything? This cannot be undone.")) {
         localStorage.clear();
         location.reload();
     }
@@ -48,27 +48,25 @@ function renderFriends() {
 function updatePayerDropdown() {
     const select = document.getElementById('payer-select');
     select.innerHTML = '<option value="" disabled selected>Who paid?</option>';
-    friends.forEach(f => {
-        select.innerHTML += `<option value="${f}">${f}</option>`;
-    });
+    friends.forEach(f => select.innerHTML += `<option value="${f}">${f}</option>`);
 }
 
 function toggleModal(editId = null) {
     const m = document.getElementById('modal');
     m.style.display = m.style.display === 'block' ? 'none' : 'block';
-
     if (editId) {
         const exp = expenses.find(e => e.id === editId);
         document.getElementById('modal-title').innerText = "Edit Expense";
         document.getElementById('desc').value = exp.desc;
         document.getElementById('amount').value = exp.amount;
         document.getElementById('payer-select').value = exp.payer;
+        document.getElementById('category-select').value = exp.category;
         document.getElementById('edit-id').value = editId;
     } else {
         document.getElementById('modal-title').innerText = "Add Expense";
+        document.getElementById('edit-id').value = '';
         document.getElementById('desc').value = '';
         document.getElementById('amount').value = '';
-        document.getElementById('edit-id').value = '';
     }
 }
 
@@ -76,14 +74,15 @@ function saveExpense() {
     const desc = document.getElementById('desc').value;
     const amount = parseFloat(document.getElementById('amount').value);
     const payer = document.getElementById('payer-select').value;
+    const category = document.getElementById('category-select').value;
     const editId = document.getElementById('edit-id').value;
 
     if (desc && amount && payer) {
         if (editId) {
-            const index = expenses.findIndex(e => e.id == editId);
-            expenses[index] = { ...expenses[index], desc, amount, payer };
+            const idx = expenses.findIndex(e => e.id == editId);
+            expenses[idx] = { desc, amount, payer, category, id: Number(editId) };
         } else {
-            expenses.push({ desc, amount, payer, id: Date.now() });
+            expenses.push({ desc, amount, payer, category, id: Date.now() });
         }
         saveData();
         renderExpenses();
@@ -103,40 +102,30 @@ function deleteExpense(id) {
 
 function renderExpenses() {
     const list = document.getElementById('expense-list');
-    const totalDisplay = document.getElementById('total-balance');
     let total = 0;
     list.innerHTML = '<h3>3. Expenses</h3>';
-    
     expenses.forEach(exp => {
         total += exp.amount;
         list.innerHTML += `
             <div class="expense-card">
-                <div class="expense-info">
-                    <strong>${exp.desc}</strong><br>
-                    <small>Paid by ${exp.payer}</small>
-                </div>
+                <div><strong>${exp.desc}</strong> <small>${exp.category}</small><br><small>Paid by ${exp.payer}</small></div>
                 <div class="expense-actions">
-                    <span style="color:var(--primary); font-weight:bold;">₹${exp.amount.toFixed(2)}</span>
+                    <b>₹${exp.amount}</b>
                     <span class="edit-icon" onclick="toggleModal(${exp.id})">✎</span>
                     <span class="delete-icon" onclick="deleteExpense(${exp.id})">🗑</span>
                 </div>
             </div>`;
     });
-    totalDisplay.innerText = `₹${total.toLocaleString('en-IN')}`;
+    document.getElementById('total-balance').innerText = `₹${total.toLocaleString('en-IN')}`;
 }
 
 function calculateBalances() {
     const area = document.getElementById('settlement-area');
-    if (friends.length < 2) {
-        area.innerHTML = "Add at least 2 friends to calculate.";
-        return;
-    }
-
-    let net = {};
-    friends.forEach(f => net[f] = 0);
+    if (friends.length < 2) { area.innerHTML = "Add friends to see settlements."; return; }
+    
+    let net = {}; friends.forEach(f => net[f] = 0);
     const total = expenses.reduce((s, e) => s + e.amount, 0);
     const share = total / friends.length;
-
     expenses.forEach(e => net[e.payer] += e.amount);
     friends.forEach(f => net[f] -= share);
 
@@ -157,4 +146,13 @@ function calculateBalances() {
         });
     });
     if (area.innerHTML === "") area.innerHTML = "All settled!";
+}
+
+function shareSettlements() {
+    const name = tripName || "Our Trip";
+    const cards = document.querySelectorAll('.settle-card');
+    let msg = `📊 *Settlement: ${name}*\n\n`;
+    cards.forEach(c => msg += `• ${c.innerText}\n`);
+    if (navigator.share) navigator.share({ title: name, text: msg });
+    else window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }

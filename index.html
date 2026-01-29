@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#075e54">
     <title>TripSplit India</title>
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,8 +13,8 @@
     <div class="app-container">
         <header>
             <div class="header-top">
-                <input type="text" id="trip-name-input" oninput="saveTripName()" placeholder="Enter Trip Name..." class="trip-name-field">
-                <button class="clear-btn" onclick="clearTrip()">Reset</button>
+                <input type="text" id="trip-name-input" oninput="saveTripName()" placeholder="Trip Name..." class="trip-name-field">
+                <button class="reset-btn" onclick="clearTrip()">Reset</button>
             </div>
             <div class="balance-card">
                 <small>TOTAL TRIP COST</small>
@@ -23,8 +25,8 @@
         <section class="section">
             <h3>1. Friends</h3>
             <div class="input-group">
-                <input type="text" id="friend-name" placeholder="Name (e.g. Arjun)">
-                <button class="add-friend-btn" onclick="addFriend()">Add</button>
+                <input type="text" id="friend-name" placeholder="Name">
+                <button class="add-btn" onclick="addFriend()">Add</button>
             </div>
             <div id="friends-tags" class="tags-container"></div>
         </section>
@@ -32,8 +34,9 @@
         <section class="section">
             <h3>2. Settlements</h3>
             <div id="settlement-area" class="settlement-box">
-                <p class="empty-msg">Add friends and expenses to see who owes whom.</p>
+                <p class="empty-msg">Add friends and expenses to see results.</p>
             </div>
+            <button class="share-btn" onclick="shareSettlements()">Share to WhatsApp</button>
         </section>
 
         <main id="expense-list" class="expense-section">
@@ -46,13 +49,19 @@
             <div class="modal-content">
                 <h3 id="modal-title">Add Expense</h3>
                 <input type="hidden" id="edit-id"> 
-                <input type="text" id="desc" placeholder="What was this for?">
+		<select id="category-select">
+                    <option value="🍱 Food">Food</option>
+                    <option value="🚗 Transport">Transport</option>
+                    <option value="🏨 Stay">Stay</option>
+                    <option value="🎟️ Other">Other</option>
+                </select>                
+		<input type="text" id="desc" placeholder="Description (e.g. Lunch)">
                 <input type="number" id="amount" placeholder="Amount (₹)">
                 <select id="payer-select">
                     <option value="" disabled selected>Who paid?</option>
                 </select>
                 <div class="modal-btns">
-                    <button class="primary-btn" onclick="saveExpense()">Save Expense</button>
+                    <button class="primary-btn" onclick="saveExpense()">Save</button>
                     <button class="secondary-btn" onclick="toggleModal()">Cancel</button>
                 </div>
             </div>
@@ -60,5 +69,4 @@
     </div>
     <script src="script.js"></script>
 </body>
-<link rel="manifest" href="manifest.json">
 </html>
