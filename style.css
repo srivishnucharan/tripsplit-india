@@ -1,127 +1,143 @@
-:root {
-    --primary: #075e54;
-    --accent: #128c7e;
-    --white: #ffffff;
-    --text: #1c1e21;
+:root { 
+    --primary: #075e54; 
+    --accent: #128c7e; 
+    --bright: #00ffd0; 
+    --gold: #ffcc00;   
+    --glass-bg: rgba(255, 255, 255, 0.05); 
+    --glass-border: 2.5px solid rgba(255, 255, 255, 0.9); /* Stronger Border */
+    --blur: blur(1.5px); /* Very Very Subtle Blur */
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    margin: 0;
+body { 
+    font-family: 'Inter', sans-serif; 
+    margin: 0; 
     background-color: #000; 
-    display: flex;
-    justify-content: center;
-    color: var(--text);
+    display: flex; 
+    justify-content: center; 
+    color: #fff; 
 }
 
-.app-container {
-    width: 100%;
-    max-width: 500px;
-    min-height: 100vh;
-    position: relative;
-    background: url('bg.jpg') no-repeat center center fixed;
-    background-size: cover;
-    padding-bottom: 100px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+.app-container { 
+    width: 100%; 
+    max-width: 500px; 
+    min-height: 100vh; 
+    background: url('bg.jpg') no-repeat center center fixed; 
+    background-size: cover; 
+    padding-bottom: 100px; 
 }
 
-header {
-    background: rgba(7, 94, 84, 0.85);
-    color: white;
-    padding: 20px;
-    border-radius: 0 0 20px 20px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    margin-bottom: 5px;
+header { 
+    background: linear-gradient(135deg, rgba(7, 94, 84, 0.98), rgba(18, 140, 126, 0.95)); 
+    padding: 30px 20px; 
+    border-radius: 0 0 35px 35px; 
+    margin-bottom: 10px; 
 }
 
-.header-top { display: flex; justify-content: space-between; align-items: center; }
-.brand-container { display: flex; align-items: center; gap: 10px; flex: 1; }
-.app-logo { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); object-fit: cover; }
+.brand-group-horizontal { display: flex; align-items: center; gap: 15px; }
 
-.trip-name-field {
-    background: transparent; border: none; color: white; font-size: 1.2rem; font-weight: 700;
-    width: 100%; outline: none; border-bottom: 1px solid rgba(255,255,255,0.3);
+.app-logo { 
+    height: 65px; width: 65px; 
+    border-radius: 50%; 
+    border: 3px solid var(--bright); 
+    object-fit: cover;
 }
 
-.balance-card { text-align: center; margin-top: 15px; }
-
-/* Section Header for WhatsApp Alignment */
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+.brand-subtext { 
+    font-size: 2rem; font-weight: 900; margin: 0;
+    text-transform: uppercase; line-height: 0.9;
+    transform: scaleY(1.15);
+    background: linear-gradient(to right, #fff, var(--bright), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.section-header h3 { margin: 0; }
-
-/* WhatsApp Icon Button Styling */
-.whatsapp-icon-btn {
-    background: rgba(37, 211, 102, 0.2);
-    border: 1px solid rgba(37, 211, 102, 0.5);
-    border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s;
+/* Trip Name with Inline Reset Button */
+.trip-info-row { margin: 25px 0 15px 0; }
+.trip-input-wrapper { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
 }
 
-.whatsapp-icon-btn:active { transform: scale(0.9); }
-.whatsapp-icon-btn img { width: 22px; height: 22px; }
-
-/* Content Cards */
-.section, .expense-section {
-    margin: 15px;
-    padding: 20px;
+.trip-name-field { 
     background: transparent; 
-    backdrop-filter: blur(2px); 
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.6); 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: none; 
+    color: white; 
+    font-size: 1.4rem; 
+    font-weight: 700; 
+    border-bottom: 2px solid rgba(255,255,255,0.4); 
+    width: 100%; 
+    outline: none;
+    padding-right: 45px; /* Space for the reset icon */
 }
 
-.tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.tag { background: var(--primary); color: white; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 12px; }
-
-input, select { 
-    flex: 1; 
-    padding: 12px; 
-    border: 1px solid rgba(0, 0, 0, 0.1); 
-    border-radius: 8px; 
-    font-size: 16px; 
-    background: rgba(255, 255, 255, 0.8); 
+.reset-icon-inline { 
+    position: absolute;
+    right: 5px;
+    bottom: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
 }
 
-.add-btn { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 12px 20px; cursor: pointer; font-weight: 600; }
-.reset-btn { background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 5px; padding: 5px 10px; font-size: 11px; cursor: pointer; }
-
-.settlement-box { 
-    background: rgba(255, 255, 255, 0.25); 
-    padding: 15px; 
-    border-radius: 12px; 
-    border-left: 5px solid var(--accent); 
+/* Glassmorphism Sections */
+.glass-section { 
+    margin: 20px 15px; 
+    padding: 20px; 
+    background: var(--glass-bg); 
+    backdrop-filter: var(--blur); 
+    -webkit-backdrop-filter: var(--blur);
+    border-radius: 20px; 
+    border: var(--glass-border); 
 }
 
-.settle-card { font-size: 14px; margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 700; }
+.section-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px; 
+}
 
-.expense-card { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.4); }
-.expense-actions { display: flex; align-items: center; gap: 15px; }
-.delete-icon { color: #d93025; cursor: pointer; font-size: 18px; }
-.edit-icon { cursor: pointer; font-size: 18px; color: var(--accent); }
+.whatsapp-icon-btn { 
+    background: #25D366; 
+    border: none; 
+    border-radius: 50%; 
+    width: 36px; height: 36px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.whatsapp-icon-btn img { width: 20px; filter: brightness(0) invert(1); }
 
+/* Friend Row and Tags */
+.friend-input-row { display: flex; margin-bottom: 10px; }
+.friend-input-row input { 
+    border-radius: 12px 0 0 12px; 
+    border: 1px solid rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.95);
+    color: #000;
+}
+.add-btn-right { 
+    background: var(--accent); color: white; border: none; 
+    border-radius: 0 12px 12px 0; padding: 0 20px; font-weight: 800;
+}
+.tag { background: var(--primary); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 8px;}
+
+/* Cost Strip */
+.balance-strip { 
+    display: flex; justify-content: space-between; align-items: center; 
+    background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 15px;
+}
+.amount { font-size: 1.5rem; font-weight: 300; color: var(--gold); }
+
+/* FAB & Modal */
 .fab { 
-    position: fixed; bottom: 25px; right: 25px; background: var(--accent); color: white; 
-    width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; 
-    justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 10;
+    position: fixed; bottom: 30px; right: 30px; 
+    background: var(--accent); color: white; 
+    width: 65px; height: 65px; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 35px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); z-index: 100;
 }
-
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; }
-.modal-content { background: white; margin: 20% auto; padding: 25px; width: 85%; border-radius: 15px; }
-.modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-.primary-btn { background: var(--accent); color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; }
-.secondary-btn { background: #eee; flex: 1; padding: 12px; border: none; border-radius: 8px; }
+.modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; }
+.modal-content { background: #fff; margin: 20% auto; padding: 25px; width: 85%; max-width: 400px; border-radius: 20px; color: #333; }
+input, select { padding: 12px; border-radius: 8px; font-size: 16px; width: 100%; box-sizing: border-box; }

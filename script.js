@@ -1,31 +1,13 @@
-let expenses = JSON.parse(localStorage.getItem('tripExpenses')) || [];
 let friends = JSON.parse(localStorage.getItem('tripFriends')) || [];
-let tripName = localStorage.getItem('tripName') || "";
+let expenses = JSON.parse(localStorage.getItem('tripExpenses')) || [];
 
-window.onload = () => {
-    document.getElementById('trip-name-input').value = tripName;
-    renderFriends();
-    renderExpenses();
-    updatePayerDropdown();
-    calculateBalances();
-};
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTrip = localStorage.getItem('tripName');
+    if (savedTrip) document.getElementById('trip-name-input').value = savedTrip;
+    refreshUI();
+});
 
-function saveTripName() {
-    tripName = document.getElementById('trip-name-input').value;
-    localStorage.setItem('tripName', tripName);
-}
-
-function saveData() {
-    localStorage.setItem('tripExpenses', JSON.stringify(expenses));
-    localStorage.setItem('tripFriends', JSON.stringify(friends));
-}
-
-function clearTrip() {
-    if (confirm("Reset everything? All trip data will be erased.")) {
-        localStorage.clear();
-        location.reload();
-    }
-}
+function saveTripName() { localStorage.setItem('tripName', document.getElementById('trip-name-input').value); }
 
 function addFriend() {
     const input = document.getElementById('friend-name');
@@ -33,129 +15,120 @@ function addFriend() {
     if (name && !friends.includes(name)) {
         friends.push(name);
         input.value = '';
-        saveData();
-        renderFriends();
-        updatePayerDropdown();
-        calculateBalances();
+        saveAndRefresh();
     }
 }
 
-function renderFriends() {
-    const container = document.getElementById('friends-tags');
-    container.innerHTML = friends.map(f => `<span class="tag">${f}</span>`).join('');
-}
-
-function updatePayerDropdown() {
-    const select = document.getElementById('payer-select');
-    select.innerHTML = '<option value="" disabled selected>Who paid?</option>';
-    friends.forEach(f => select.innerHTML += `<option value="${f}">${f}</option>`);
-}
-
-function toggleModal(editId = null) {
-    const m = document.getElementById('modal');
-    m.style.display = m.style.display === 'block' ? 'none' : 'block';
+function openExpenseModal(editId = null) {
+    if (friends.length === 0) return alert("Add friends first!");
+    const select = document.getElementById('modal-payer');
+    select.innerHTML = friends.map(f => `<option value="${f}">${f}</option>`).join('');
+    
     if (editId) {
         const exp = expenses.find(e => e.id === editId);
         document.getElementById('modal-title').innerText = "Edit Expense";
-        document.getElementById('desc').value = exp.desc;
-        document.getElementById('amount').value = exp.amount;
-        document.getElementById('payer-select').value = exp.payer;
-        document.getElementById('category-select').value = exp.category;
         document.getElementById('edit-id').value = editId;
+        document.getElementById('modal-category').value = exp.cat;
+        document.getElementById('modal-desc').value = exp.desc;
+        document.getElementById('modal-amount').value = exp.amt;
+        document.getElementById('modal-payer').value = exp.payer;
     } else {
-        document.getElementById('modal-title').innerText = "Add Expense";
-        document.getElementById('edit-id').value = '';
-        document.getElementById('desc').value = '';
-        document.getElementById('amount').value = '';
+        document.getElementById('modal-title').innerText = "Add New Expense";
+        document.getElementById('edit-id').value = "";
+        document.getElementById('modal-desc').value = "";
+        document.getElementById('modal-amount').value = "";
     }
+    document.getElementById('expense-modal').style.display = 'block';
 }
 
-function saveExpense() {
-    const desc = document.getElementById('desc').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const payer = document.getElementById('payer-select').value;
-    const category = document.getElementById('category-select').value;
-    const editId = document.getElementById('edit-id').value;
+function closeModal() { document.getElementById('expense-modal').style.display = 'none'; }
 
-    if (desc && amount && payer) {
-        if (editId) {
-            const idx = expenses.findIndex(e => e.id == editId);
-            expenses[idx] = { desc, amount, payer, category, id: Number(editId) };
-        } else {
-            expenses.push({ desc, amount, payer, category, id: Date.now() });
-        }
-        saveData();
-        renderExpenses();
-        calculateBalances();
-        toggleModal();
+function submitExpense() {
+    const id = document.getElementById('edit-id').value;
+    const cat = document.getElementById('modal-category').value;
+    const desc = document.getElementById('modal-desc').value;
+    const amt = parseFloat(document.getElementById('modal-amount').value);
+    const payer = document.getElementById('modal-payer').value;
+
+    if (!desc || isNaN(amt)) return alert("Please fill amount and description!");
+
+    if (id) {
+        const index = expenses.findIndex(e => e.id == id);
+        expenses[index] = { ...expenses[index], cat, desc, amt, payer };
+    } else {
+        expenses.push({ id: Date.now(), cat, desc, amt, payer, date: new Date().toLocaleDateString() });
     }
+
+    closeModal();
+    saveAndRefresh();
 }
 
 function deleteExpense(id) {
     if (confirm("Delete this expense?")) {
         expenses = expenses.filter(e => e.id !== id);
-        saveData();
-        renderExpenses();
-        calculateBalances();
+        saveAndRefresh();
     }
 }
 
-function renderExpenses() {
-    const list = document.getElementById('expense-list');
+function refreshUI() {
+    document.getElementById('friends-list').innerHTML = friends.map(f => `<span class="tag">${f}</span>`).join('');
     let total = 0;
-    list.innerHTML = '<h3>3. Expenses</h3>';
-    expenses.forEach(exp => {
-        total += exp.amount;
-        list.innerHTML += `
-            <div class="expense-card">
-                <div><strong>${exp.desc}</strong> <small style="color:#888">${exp.category}</small><br><small>Paid by ${exp.payer}</small></div>
-                <div class="expense-actions">
-                    <b>₹${exp.amount}</b>
-                    <span class="edit-icon" onclick="toggleModal(${exp.id})">✎</span>
-                    <span class="delete-icon" onclick="deleteExpense(${exp.id})">🗑</span>
-                </div>
-            </div>`;
-    });
-    document.getElementById('total-balance').innerText = `₹${total.toLocaleString('en-IN')}`;
+    document.getElementById('expenses-list').innerHTML = expenses.map(e => {
+        total += e.amt;
+        return `<div class="expense-card">
+            <div>
+                <strong>${e.cat} - ${e.desc}</strong><br>
+                <span class="exp-meta" style="font-size:0.75rem; color:#666;">${e.payer} paid • ${e.date}</span>
+            </div>
+            <div class="exp-amt" style="text-align:right;">
+                <strong>₹${e.amt}</strong><br>
+                <span onclick="openExpenseModal(${e.id})" style="color:var(--accent); font-size:0.75rem; cursor:pointer; margin-right:10px; font-weight:bold;">Edit</span>
+                <span onclick="deleteExpense(${e.id})" style="color:#e74c3c; font-size:0.75rem; cursor:pointer; font-weight:bold;">Del</span>
+            </div>
+        </div>`;
+    }).join('');
+    document.getElementById('total-balance').innerText = `₹${total.toFixed(0)}`;
+    calculateMath();
 }
 
-function calculateBalances() {
+function calculateMath() {
     const area = document.getElementById('settlement-area');
-    if (friends.length < 2) { area.innerHTML = "Add friends to see settlements."; return; }
-    
-    let net = {}; friends.forEach(f => net[f] = 0);
-    const total = expenses.reduce((s, e) => s + e.amount, 0);
-    const share = total / friends.length;
-    expenses.forEach(e => net[e.payer] += e.amount);
-    friends.forEach(f => net[f] -= share);
-
-    let debtors = [], creditors = [];
-    for (let f in net) {
-        if (net[f] < -0.01) debtors.push({ n: f, a: Math.abs(net[f]) });
-        else if (net[f] > 0.01) creditors.push({ n: f, a: net[f] });
+    if (friends.length < 2 || expenses.length === 0) {
+        area.innerHTML = `<p style="font-size:0.8rem; opacity:0.6; text-align:center;">Add data to see settlements...</p>`;
+        return;
     }
-
-    area.innerHTML = "";
-    debtors.forEach(d => {
-        creditors.forEach(c => {
-            if (d.a > 0 && c.a > 0) {
-                let m = Math.min(d.a, c.a);
-                area.innerHTML += `<div class="settle-card"><b>${d.n}</b> pays <b>${c.n}</b>: <b>₹${m.toFixed(2)}</b></div>`;
-                d.a -= m; c.a -= m;
-            }
-        });
+    let bal = {};
+    friends.forEach(f => bal[f] = 0);
+    expenses.forEach(e => {
+        let share = e.amt / friends.length;
+        friends.forEach(f => bal[f] += (f === e.payer ? (e.amt - share) : -share));
     });
-    if (area.innerHTML === "") area.innerHTML = "All settled!";
+    let creditors = [], debtors = [];
+    for (let f in bal) {
+        if (bal[f] > 0.01) creditors.push({n: f, a: bal[f]});
+        else if (bal[f] < -0.01) debtors.push({n: f, a: Math.abs(bal[f])});
+    }
+    let res = [];
+    while (debtors.length && creditors.length) {
+        let d = debtors[0], c = creditors[0], p = Math.min(d.a, c.a);
+        res.push(`<div class="settle-card" style="margin-bottom:8px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:5px;"><strong>${d.n}</strong> ➔ <strong>${c.n}</strong>: ₹${p.toFixed(0)}</div>`);
+        d.a -= p; c.a -= p;
+        if (d.a <= 0.01) debtors.shift();
+        if (c.a <= 0.01) creditors.shift();
+    }
+    area.innerHTML = res.join('') || "All settled!";
 }
 
 function shareSettlements() {
-    const name = tripName || "Our Trip";
-    const cards = document.querySelectorAll('.settle-card');
-    let msg = `📊 *Settlement: ${name}*\n\n`;
-    cards.forEach(c => msg += `• ${c.innerText}\n`);
-    if (navigator.share) {
-        navigator.share({ title: name, text: msg });
-    } else {
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
-    }
+    let t = `*TripSplit-India: ${document.getElementById('trip-name-input').value || "Trip"}*\nTotal: ${document.getElementById('total-balance').innerText}\n\n*Settlements:*\n`;
+    document.querySelectorAll('.settle-card').forEach(c => t += `• ${c.innerText}\n`);
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`, '_blank');
 }
+
+function saveAndRefresh() {
+    localStorage.setItem('tripFriends', JSON.stringify(friends));
+    localStorage.setItem('tripExpenses', JSON.stringify(expenses));
+    refreshUI();
+}
+
+function clearTrip() { if (confirm("Clear all trip data?")) { localStorage.clear(); location.reload(); } }

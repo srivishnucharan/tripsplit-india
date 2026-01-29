@@ -2,78 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#075e54">
-    <title>TripSplit India</title>
-    <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripSplit-India</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <div class="app-container">
         <header>
-            <div class="header-top">
-                <div class="brand-container">
+            <div class="header-top-row">
+                <div class="brand-group-horizontal">
                     <img src="logo.png" alt="Logo" class="app-logo">
-                    <input type="text" id="trip-name-input" oninput="saveTripName()" placeholder="Trip Name..." class="trip-name-field">
+                    <h1 class="brand-subtext">TripSplit-India</h1>
                 </div>
-                <button class="reset-btn" onclick="clearTrip()">Reset</button>
             </div>
-            <div class="balance-card">
-                <small>TOTAL TRIP COST</small>
-                <h2 id="total-balance">₹0</h2>
+
+            <div class="trip-info-row">
+                <div class="trip-input-wrapper">
+                    <input type="text" id="trip-name-input" oninput="saveTripName()" placeholder="Name your trip..." class="trip-name-field">
+                    <span class="reset-icon-inline" onclick="clearTrip()" title="Reset Trip">🔄</span>
+                </div>
+            </div>
+
+            <div class="balance-strip">
+                <span class="label">TOTAL TRIP COST</span>
+                <span id="total-balance" class="amount">₹0</span>
             </div>
         </header>
 
-        <section class="section">
-            <h3>1. Friends</h3>
-            <div class="input-group">
-                <input type="text" id="friend-name" placeholder="Enter name">
-                <button class="add-btn" onclick="addFriend()">Add</button>
+        <section class="glass-section">
+            <div class="section-header"><h3>1. Friends</h3></div>
+            <div class="friend-input-row">
+                <input type="text" id="friend-name" placeholder="Friend's Name">
+                <button class="add-btn-right" onclick="addFriend()">Add</button>
             </div>
-            <div id="friends-tags" class="tags-container"></div>
+            <div id="friends-list" class="tags-container"></div>
         </section>
 
-        <section class="section">
-          <div class="section-header">
-            <h3>2. Settlements</h3>
-            <button class="whatsapp-icon-btn" onclick="shareSettlements()" title="Share to WhatsApp">
-             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
-            </button>
-          </div>
-         <div id="settlement-area" class="settlement-box">
-          <p class="empty-msg">Add friends and expenses to see results.</p>
-         </div>
-       </section>
+        <section class="glass-section">
+            <div class="section-header">
+                <h3>2. Settlements</h3>
+                <button class="whatsapp-icon-btn" onclick="shareSettlements()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
+                </button>
+            </div>
+            <div id="settlement-area" class="settlement-inner-box">
+                <p class="empty-msg">Add data to see settlements...</p>
+            </div>
+        </section>
 
-        <main id="expense-list" class="expense-section">
-            <h3>3. Expenses</h3>
-            </main>
+        <section class="glass-section">
+            <div class="section-header"><h3>3. Expenses</h3></div>
+            <div id="expenses-list"></div>
+        </section>
 
-        <div class="fab" onclick="toggleModal()">+</div>
+        <div class="fab" onclick="openExpenseModal()">+</div>
+    </div>
 
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h3 id="modal-title">Add Expense</h3>
-                <input type="hidden" id="edit-id"> 
-                <select id="category-select">
-                    <option value="🍱 Food">Food</option>
-                    <option value="🚗 Transport">Transport</option>
-                    <option value="🏨 Stay">Stay</option>
-                    <option value="🎟️ Other">Other</option>
-                </select>
-                <input type="text" id="desc" placeholder="What was it for?">
-                <input type="number" id="amount" placeholder="Amount (₹)">                
-                <select id="payer-select">
-                    <option value="" disabled selected>Who paid?</option>
-                </select>
-                <div class="modal-btns">
-                    <button class="primary-btn" onclick="saveExpense()">Save</button>
-                    <button class="secondary-btn" onclick="toggleModal()">Cancel</button>
-                </div>
+    <div id="expense-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Add New Expense</h3>
+            <input type="hidden" id="edit-id">
+            <label>Category</label>
+            <select id="modal-category">
+                <option value="🍕 Food">Food</option>
+                <option value="🚗 Travel">Travel</option>
+                <option value="🏨 Stay">Stay</option>
+                <option value="✨ Other">Other</option>
+            </select>
+            <label>What is it for?</label>
+            <input type="text" id="modal-desc" placeholder="e.g. Dinner">
+            <label>Amount (₹)</label>
+            <input type="number" id="modal-amount" placeholder="0.00">
+            <label>Who paid?</label>
+            <select id="modal-payer"></select>
+            <div class="modal-btns">
+                <button class="secondary-btn" onclick="closeModal()">Cancel</button>
+                <button class="primary-btn" onclick="submitExpense()">Save Expense</button>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
