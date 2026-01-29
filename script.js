@@ -21,7 +21,7 @@ function saveData() {
 }
 
 function clearTrip() {
-    if (confirm("Reset everything? This cannot be undone.")) {
+    if (confirm("Reset everything? All trip data will be erased.")) {
         localStorage.clear();
         location.reload();
     }
@@ -108,7 +108,7 @@ function renderExpenses() {
         total += exp.amount;
         list.innerHTML += `
             <div class="expense-card">
-                <div><strong>${exp.desc}</strong> <small>${exp.category}</small><br><small>Paid by ${exp.payer}</small></div>
+                <div><strong>${exp.desc}</strong> <small style="color:#888">${exp.category}</small><br><small>Paid by ${exp.payer}</small></div>
                 <div class="expense-actions">
                     <b>₹${exp.amount}</b>
                     <span class="edit-icon" onclick="toggleModal(${exp.id})">✎</span>
@@ -153,6 +153,9 @@ function shareSettlements() {
     const cards = document.querySelectorAll('.settle-card');
     let msg = `📊 *Settlement: ${name}*\n\n`;
     cards.forEach(c => msg += `• ${c.innerText}\n`);
-    if (navigator.share) navigator.share({ title: name, text: msg });
-    else window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    if (navigator.share) {
+        navigator.share({ title: name, text: msg });
+    } else {
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    }
 }

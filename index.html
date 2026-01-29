@@ -13,7 +13,10 @@
     <div class="app-container">
         <header>
             <div class="header-top">
-                <input type="text" id="trip-name-input" oninput="saveTripName()" placeholder="Trip Name..." class="trip-name-field">
+                <div class="brand-container">
+                    <img src="logo.png" alt="Logo" class="app-logo">
+                    <input type="text" id="trip-name-input" oninput="saveTripName()" placeholder="Trip Name..." class="trip-name-field">
+                </div>
                 <button class="reset-btn" onclick="clearTrip()">Reset</button>
             </div>
             <div class="balance-card">
@@ -25,19 +28,23 @@
         <section class="section">
             <h3>1. Friends</h3>
             <div class="input-group">
-                <input type="text" id="friend-name" placeholder="Name">
+                <input type="text" id="friend-name" placeholder="Enter name">
                 <button class="add-btn" onclick="addFriend()">Add</button>
             </div>
             <div id="friends-tags" class="tags-container"></div>
         </section>
 
         <section class="section">
+          <div class="section-header">
             <h3>2. Settlements</h3>
-            <div id="settlement-area" class="settlement-box">
-                <p class="empty-msg">Add friends and expenses to see results.</p>
-            </div>
-            <button class="share-btn" onclick="shareSettlements()">Share to WhatsApp</button>
-        </section>
+            <button class="whatsapp-icon-btn" onclick="shareSettlements()" title="Share to WhatsApp">
+             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
+            </button>
+          </div>
+         <div id="settlement-area" class="settlement-box">
+          <p class="empty-msg">Add friends and expenses to see results.</p>
+         </div>
+       </section>
 
         <main id="expense-list" class="expense-section">
             <h3>3. Expenses</h3>
@@ -49,14 +56,14 @@
             <div class="modal-content">
                 <h3 id="modal-title">Add Expense</h3>
                 <input type="hidden" id="edit-id"> 
-		<select id="category-select">
+                <select id="category-select">
                     <option value="🍱 Food">Food</option>
                     <option value="🚗 Transport">Transport</option>
                     <option value="🏨 Stay">Stay</option>
                     <option value="🎟️ Other">Other</option>
-                </select>                
-		<input type="text" id="desc" placeholder="Description (e.g. Lunch)">
-                <input type="number" id="amount" placeholder="Amount (₹)">
+                </select>
+                <input type="text" id="desc" placeholder="What was it for?">
+                <input type="number" id="amount" placeholder="Amount (₹)">                
                 <select id="payer-select">
                     <option value="" disabled selected>Who paid?</option>
                 </select>
